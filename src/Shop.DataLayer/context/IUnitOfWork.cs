@@ -6,7 +6,7 @@ namespace Shop.DataLayer.context
 	{
 		DbSet<TEntity> Set<TEntity>() where TEntity : class;
 		int SaveChange();
-
+		void MarkAsDeleted<TEntity>(TEntity entity);
 		Task<int> SaveChangesAsync();
 		 
 	}

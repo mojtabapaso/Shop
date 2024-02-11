@@ -1,8 +1,7 @@
 ﻿using System.Diagnostics;
-using System.Reflection;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shop.DataLayer.context;
-using Shop.Entities;
+using Microsoft.Extensions.Caching.Memory;
 using Shop.Models;
 using Shop.Services.Contracts;
 using Shop.ViewModels.Products;
@@ -10,67 +9,63 @@ using Shop.ViewModels.Products;
 namespace Shop.Controllers;
 public class HomeController : Controller
 {
-	
+
 	private readonly ILogger<HomeController> _logger;
 	private readonly IProductServisec _productServisec;
-	private readonly ShopDbContext _dbContext;
-	private readonly IUnitOfWork _uow;
-    private readonly IConfiguration configuration;
-    private readonly IWebHostEnvironment env;
+	//private readonly IUnitOfWork uow;
+	private readonly IConfiguration configuration;
+	private readonly IWebHostEnvironment env;
+	private readonly IMemoryCache memoryCache;
 
-    public HomeController(ILogger<HomeController> logger,IProductServisec productServisec,ShopDbContext dbContext,IUnitOfWork uow,IConfiguration configuration, IWebHostEnvironment env)
-		
-		
-		
+	public HomeController(ILogger<HomeController> logger,
+		IProductServisec productServisec,
+		//IUnitOfWork uow,
+		IConfiguration configuration,
+		IWebHostEnvironment env,
+		IMemoryCache memoryCache)
 	{
 		_logger = logger;
 		_productServisec = productServisec;
-		_dbContext = dbContext;
-		_uow = uow;
-        this.configuration = configuration;
-        this.env = env;
-    }
+		//this.uow = uow;
+		this.configuration = configuration;
+		this.env = env;
+		this.memoryCache = memoryCache;
+	}
 
 	public IActionResult Index()
 	{
-		if (env.IsDevelopment())
-			return Content("Welcom Lord");
-
-		//var serverSmtp = configuration["Smtp:server2"];
-		var serverSmtp = configuration.GetValue<string>("Smtp:server2");
-	
-
-        return Content(serverSmtp);
+		return View();
 	}
-	public IActionResult AddProduct() 
-	{ 
+	[ResponseCache(Duration = 60)]
+	public IActionResult AddProduct()
+	{
 		return View();
 	}
 	public IActionResult Add()
 	{
-        return View();
+		return View();
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> AddProductAsync(AddProductViewModel model) 
+	public async Task<IActionResult> AddProductAsync(AddProductViewModel model)
 	{
 
 		if (!ModelState.IsValid)
 		{
 			ModelState.AddModelError(string.Empty, "Please enter valid input.");
 			return View(model);
-
 		}
-		_productServisec.Add(
-			new Product()
-			{
-				Title = model.Title,
-				Description = model.Description,
-			});
-		await _uow.SaveChangesAsync();
+		//_productServisec.Add()
+		//_productServisec.Add(
+		//    new Product()
+		//    {
+		//        Title = model.Title,
+		//        Description = model.Description,
+		//    });
+		//await _uow.SaveChangesAsync();
 		return RedirectToAction(nameof(Index));
 	}
-
+	[Authorize]
 	public IActionResult Privacy()
 	{
 		return View();

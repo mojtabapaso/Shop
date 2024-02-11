@@ -2,9 +2,6 @@
 
 namespace Shop.Services.Contracts;
 
-public interface IProductServisec
+public interface IProductServisec : IGenericServices<Product>
 {
-	void Add(Product product);
-
-	List<Product> GetAll();
 }

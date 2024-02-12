@@ -3,15 +3,32 @@ using MongoDB.Driver;
 
 namespace Shop.DataLayer.context;
 
+//public static class MongoDBContext
+//{
+//	public static MongoClient Context()
+//	{
+//		IConfigurationBuilder builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", false, true);
+//		IConfigurationRoot root = builder.Build();
+//		string? mongoDbConnectionString = root["ConnectionStrings:DatabaseNoSQL:MongoDb"];
+//		MongoClient dbClient = new MongoClient(mongoDbConnectionString);
+//		return dbClient;
+//	}
+//}
+
 public static class MongoDBContext
 {
-	public static MongoClient Context()
-	{
-		IConfigurationBuilder builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", false, true);
-		IConfigurationRoot root = builder.Build();
-		string? mongoDbConnectionString = root["ConnectionStrings:DatabaseNoSQL:MongoDb"];
-		MongoClient dbClient = new MongoClient(mongoDbConnectionString);
-		return dbClient;
-	}
+    private static readonly MongoClient _dbClient;
 
+    static MongoDBContext()
+    {
+        IConfigurationBuilder builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", false, true);
+        IConfigurationRoot root = builder.Build();
+        string? mongoDbConnectionString = root["ConnectionStrings:DatabaseNoSQL:MongoDb"];
+        _dbClient = new MongoClient(mongoDbConnectionString);
+    }
+
+    public static MongoClient Context()
+    {
+        return _dbClient;
+    }
 }

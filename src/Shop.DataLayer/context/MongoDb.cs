@@ -5,7 +5,7 @@ namespace Shop.DataLayer.context;
 
 public static class MongoDb
 {
-	private static MongoClient dbClient = MongoDBContext.Context();
+	private static readonly  MongoClient dbClient = MongoDBContext.Context();
 
 	private static IMongoCollection<BsonDocument> CreateIndexWithExpirationInCollection(IMongoDatabase mongoDatabase)
 	{

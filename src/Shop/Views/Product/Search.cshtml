@@ -1,0 +1,27 @@
+﻿@{
+	ViewData["Title"] = "محصولات";
+}
+@model List<Product>
+   
+<h2>Search Results</h2>
+
+@if (Model != null && Model.Any())
+{
+    <ul>
+        @foreach (var product in Model)
+        {
+            <li>
+                <p>@product.Id</p>
+                <h3>@product.Title</h3>
+                <h2>@product.Price</h2>
+                <p>@product.Description</p>
+
+                @* <a href="@product.Url">Details</a> *@
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No products found for your search.</p>
+}

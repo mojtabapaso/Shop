@@ -1,19 +1,21 @@
-﻿using Shop.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Shop.DataLayer.SeedData;
+using Shop.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Shop.DataLayer.context;
 
-public class ShopDbContext :IdentityDbContext<User,Role,int,UserClaim,UserRole,UserLogin,RoleClaim,UserToken>, IUnitOfWork
+public class ShopDbContext : IdentityDbContext<User,IdentityRole<string>,string>, IUnitOfWork
 {
-	public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options){ }
+	public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options) { }
 
-	//public DbSet<User> Users { get; set; }
+	public DbSet<User> Users { get; set; }
 	public DbSet<Product> Products { get; set; }
 	public DbSet<Tag> Tags { get; set; }
 
-    public void MarkAsDeleted<TEntity>(TEntity entity)
-    {
+	public void MarkAsDeleted<TEntity>(TEntity entity)
+	{
 		if (entity != null)
 		{
 			base.Entry(entity).State = EntityState.Deleted;
@@ -27,6 +29,17 @@ public class ShopDbContext :IdentityDbContext<User,Role,int,UserClaim,UserRole,U
 
 	public Task<int> SaveChangesAsync()
 	{
-		return base.SaveChangesAsync(); 
+		return base.SaveChangesAsync();
+	}
+
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		base.OnModelCreating(modelBuilder);
+
+		modelBuilder.ApplyConfiguration(new AdminConfiguration());
+
+		modelBuilder.ApplyConfiguration(new RoleConfiguration());
+
+		modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
 	}
 }

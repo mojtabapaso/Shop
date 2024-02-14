@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="@ViewLocalizer["lang"]" dir="@ViewLocalizer["dir"]">
+<html lang="fa" dir="rtl">
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,7 +10,7 @@
 </head>
 <body>
 	<header>
-		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark  bg-dark border-bottom box-shadow mb-3">
 			<div class="container-fluid">
 				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Shop</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -20,27 +20,23 @@
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 					<ul class="navbar-nav flex-grow-1">
 						<li class="nav-item">
-							<a class="nav-link text-dark" asp-controller="Home" asp-action="Index">@ViewLocalizer["Home"]</a>
+							<a class="nav-link text-light" asp-controller="Home" asp-action="Index">خانه</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">@ViewLocalizer["Privacy"]</a>
+							<a class="nav-link text-light" asp-controller="Home" asp-action="Privacy">Privacy</a>
 						</li>
 						@* @if (User.IsInRole("Admin"))
 						{ *@
-						<li class="nav-item">
-
 						<a asp-area="Admin" asp-controller="Home" asp-action="Index" class="btn btn-primary">ادمین پنل</a>
-						<li class="nav-item">
-
 						@* }
 						else *@
-						@if (User.Identity.IsAuthenticated)
-						{
+					@* 	@if (User.Identity.IsAuthenticated)
+						{ *@
 
 							<li class="nav-item">
-								<a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">خروج</a>
+							<a class="nav-link text-light" asp-controller="Account" asp-action="Logout">خروج</a>
 							</li>
-						}
+			@* 			}
 						else
 						{
 							<li class="nav-item">
@@ -49,16 +45,14 @@
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-controller="Account" asp-action="Register">ثبت نام</a>
 							</li>
-						}
-						<li class="nav-item">
-
+						} *@
 						<form asp-controller="Product" asp-action="Search" method="get">
 							<label class="control-label"></label>
 							<input class="form-control" name="quary" />
-							<input type="submit" class="btn btn-primary" value="جست و جو">
+							<br />
+							<input type="submit" class="btn btn-primary" value="جست و جو ">
 
 						</form>
-						</li>
 
 					</ul>
 				</div>
@@ -67,18 +61,14 @@
 	</header>
 	<div class="container">
 		<main role="main" class="pb-3">
-			@* <partial name="_RegisterPartial.cshtml"> *@
+			<partial name="_RegisterPartial.cshtml">
 				@RenderBody()
 		</main>
 	</div>
 
 	<footer class="border-top footer text-muted">
 		<div class="container">
-
 			&copy; 2023 - Shop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-			<a href="?culture=@ViewLocalizer["lanqueage"]">@ViewLocalizer["change"]</a>
-			<a href="?culture=en"></a>
-
 		</div>
 	</footer>
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>

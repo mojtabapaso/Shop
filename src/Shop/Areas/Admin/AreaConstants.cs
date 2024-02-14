@@ -1,7 +1,6 @@
-﻿namespace Shop.Areas.Admin
+﻿namespace Shop.Areas.Admin;
+
+public static class AreaConstants
 {
-	public static class AreaConstants
-	{
-		public const string AdminArea = "Admin";
-	}
+	public const string AdminArea = "Admin";
 }

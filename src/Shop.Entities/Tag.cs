@@ -2,9 +2,8 @@
 
 namespace Shop.Entities;
 
-public class Tag
+public class Tag : BaseEntitiy
 {
-	public int Id { get; set; }
 
 	[Required]
 	[MaxLength(100)]

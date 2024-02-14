@@ -11,14 +11,14 @@ using Shop.DataLayer.context;
 namespace Shop.DataLayer.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20240210091302_update product and add model tag")]
-    partial class updateproductandaddmodeltag
+    [Migration("20240214084504_add seed Data")]
+    partial class addseedData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.15");
 
             modelBuilder.Entity("Shop.Entities.Product", b =>
                 {
@@ -44,8 +44,15 @@ namespace Shop.DataLayer.Migrations
                     b.Property<string>("Model")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Price")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
@@ -58,9 +65,6 @@ namespace Shop.DataLayer.Migrations
                     b.Property<decimal>("Weight")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("price")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.ToTable("Products");
@@ -68,9 +72,8 @@ namespace Shop.DataLayer.Migrations
 
             modelBuilder.Entity("Shop.Entities.Role", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -105,11 +108,13 @@ namespace Shop.DataLayer.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("RoleId1")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("RoleId1")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -122,9 +127,8 @@ namespace Shop.DataLayer.Migrations
 
             modelBuilder.Entity("Shop.Entities.Tag", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -143,9 +147,8 @@ namespace Shop.DataLayer.Migrations
 
             modelBuilder.Entity("Shop.Entities.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
@@ -215,6 +218,28 @@ namespace Shop.DataLayer.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "d2b7969a-cb3f-4dd2-b1ad-ccda5ea19e23",
+                            CreateDateTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Admin@Admin.com",
+                            EmailConfirmed = true,
+                            FirstName = "",
+                            LastName = "",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@ADMIN.COM",
+                            NormalizedUserName = "MASTERADMIN",
+                            PasswordHash = "AQAAAAIAAYagAAAAECkGC28G24u8lcb6fsZlyP0EXFAvjdxoKuZndWPD5PyXc/YCyDEp64mwh2qN5y8T8A==",
+                            PhoneNumber = "XXXXXXXXXXXXX",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "00000000-0000-0000-0000-000000000000",
+                            TwoFactorEnabled = false,
+                            UserName = "masteradmin"
+                        });
                 });
 
             modelBuilder.Entity("Shop.Entities.UserClaim", b =>
@@ -229,11 +254,13 @@ namespace Shop.DataLayer.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId1")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId1")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -255,11 +282,13 @@ namespace Shop.DataLayer.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId1")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId1")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -272,17 +301,19 @@ namespace Shop.DataLayer.Migrations
 
             modelBuilder.Entity("Shop.Entities.UserRole", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("RoleId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("RoleId1")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("RoleId1")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId1")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId1")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -297,8 +328,8 @@ namespace Shop.DataLayer.Migrations
 
             modelBuilder.Entity("Shop.Entities.UserToken", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("TEXT");
@@ -306,8 +337,9 @@ namespace Shop.DataLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId1")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId1")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
                         .HasColumnType("TEXT");

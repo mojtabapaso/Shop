@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shop.Entities;
 
-namespace Shop.Services.Contracts;
+namespace Shop.services.Contracts;
 
 public class CustomeUserManager : UserManager<User>
 {

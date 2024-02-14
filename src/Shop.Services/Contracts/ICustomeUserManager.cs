@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Services.Contracts;
+namespace Shop.services.Contracts;
 
 public interface ICustomeUserManager
 {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shop.DataLayer.context;
 using Shop.Entities;
-using Shop.Services.Contracts;
+using Shop.services.Contracts;
 
-namespace Shop.Services.EFServices;
+namespace Shop.services.EFServices;
 
 public class GenericServices<TEntity> : IGenericServices<TEntity> where TEntity : BaseEntitiy, new()
 {

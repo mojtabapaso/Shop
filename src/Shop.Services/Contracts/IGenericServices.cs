@@ -1,6 +1,6 @@
 ﻿using Shop.Entities;
 
-namespace Shop.Services.Contracts;
+namespace Shop.services.Contracts;
 
 public interface IGenericServices<TEntity> where TEntity : BaseEntitiy
 {

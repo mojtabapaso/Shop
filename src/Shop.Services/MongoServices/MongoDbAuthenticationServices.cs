@@ -1,10 +1,10 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using Shop.DataLayer.context;
-using Shop.Entities;
-using Shop.Services.Contracts;
+using Shop.Entities.MongoEntity;
+using Shop.services.Contracts;
 
-namespace Shop.Services.MongoServices;
+namespace Shop.services.MongoServices;
 
 public class MongoDbAuthenticationServices : IMongoDbAuthenticationServices
 {

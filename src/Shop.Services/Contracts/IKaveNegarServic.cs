@@ -1,4 +1,4 @@
-﻿namespace Shop.Services.Contracts;
+﻿namespace Shop.services.Contracts;
 
 public interface IKaveNegarServic
 {

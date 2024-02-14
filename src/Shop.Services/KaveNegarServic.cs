@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
-using Shop.Services.Contracts;
+using Shop.services.Contracts;
 using Shop.ViewModels.App;
 using Microsoft.Extensions.Hosting;
-namespace Shop.Services;
+namespace Shop.services;
 
 public class KaveNegarServic : IKaveNegarServic
 {

@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 
-namespace Shop.Services.Contracts;
+namespace Shop.services.Contracts;
 
 public interface IMongoCartServices
 {

@@ -2,30 +2,34 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 using Shop.Models;
-using Shop.Services.Contracts;
+using Shop.services.Contracts;
 using Shop.ViewModels.Products;
-
+using Microsoft.AspNetCore.Http.Features;
 namespace Shop.Controllers;
 public class HomeController : Controller
 {
 
-	private readonly ILogger<HomeController> _logger;
-	private readonly IProductServisec _productServisec;
+	private readonly ILogger<HomeController> logger;
+	private readonly IStringLocalizer<HomeController> localizer;
+	private readonly IProductServisec productServisec;
 	//private readonly IUnitOfWork uow;
 	private readonly IConfiguration configuration;
 	private readonly IWebHostEnvironment env;
 	private readonly IMemoryCache memoryCache;
 
 	public HomeController(ILogger<HomeController> logger,
+		IStringLocalizer<HomeController> localizer,
 		IProductServisec productServisec,
 		//IUnitOfWork uow,
 		IConfiguration configuration,
 		IWebHostEnvironment env,
 		IMemoryCache memoryCache)
 	{
-		_logger = logger;
-		_productServisec = productServisec;
+		this.logger = logger;
+		this.localizer = localizer;
+		this.productServisec = productServisec;
 		//this.uow = uow;
 		this.configuration = configuration;
 		this.env = env;

@@ -117,22 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="change" xml:space="preserve">
-    <value>English</value>
-  </data>
-  <data name="dir" xml:space="preserve">
-    <value>rtl</value>
+  <data name="en" xml:space="preserve">
+    <value>fa</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>خانه</value>
   </data>
-  <data name="lang" xml:space="preserve">
-    <value>fa</value>
+  <data name="Login" xml:space="preserve">
+    <value>ورود</value>
   </data>
-  <data name="lanqueage" xml:space="preserve">
-    <value>en</value>
+  <data name="Logout" xml:space="preserve">
+    <value>خورج از حساب کاربری</value>
+  </data>
+  <data name="ltr" xml:space="preserve">
+    <value>rtl</value>
+  </data>
+  <data name="Panel Admin" xml:space="preserve">
+    <value>پنل ادمین</value>
   </data>
   <data name="Privacy" xml:space="preserve">
     <value>سیاست</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>ثبت نام </value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>جست و جو </value>
+  </data>
+  <data name="shop" xml:space="preserve">
+    <value>فروشگاه</value>
   </data>
 </root>

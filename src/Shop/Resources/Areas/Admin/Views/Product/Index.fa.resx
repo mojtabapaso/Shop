@@ -117,7 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="welcome" xml:space="preserve">
-    <value>welcome en</value>
+  <data name="Create" xml:space="preserve">
+    <value>ساخت </value>
+  </data>
+  <data name="List Product" xml:space="preserve">
+    <value>لیست محصولات</value>
   </data>
 </root>

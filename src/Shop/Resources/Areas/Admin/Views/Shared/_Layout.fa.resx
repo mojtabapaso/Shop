@@ -117,7 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Please enter valid input" xml:space="preserve">
-    <value>لطفا مقدار معتبر وارد.</value>
+  <data name="Brand" xml:space="preserve">
+    <value>برندها </value>
+  </data>
+  <data name="en" xml:space="preserve">
+    <value>fa</value>
+  </data>
+  <data name="exit" xml:space="preserve">
+    <value>خروج</value>
+  </data>
+  <data name="ltr" xml:space="preserve">
+    <value>rtl</value>
+  </data>
+  <data name="Panel Admin" xml:space="preserve">
+    <value>پنل ادمین</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>محصولات</value>
+  </data>
+  <data name="Shop" xml:space="preserve">
+    <value>فروشگاه بخش ادمین</value>
+  </data>
+  <data name="Tag" xml:space="preserve">
+    <value>تگ ها </value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>کاربران</value>
+  </data>
+  <data name="Web Page" xml:space="preserve">
+    <value>سایت</value>
   </data>
 </root>

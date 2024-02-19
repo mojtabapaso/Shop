@@ -117,16 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="change" xml:space="preserve">
-    <value>فارسی</value>
-  </data>
-  <data name="dir" xml:space="preserve">
-    <value>ltr</value>
-  </data>
-  <data name="lang" xml:space="preserve">
-    <value>en</value>
-  </data>
-  <data name="lanqueage" xml:space="preserve">
-    <value>fa</value>
+  <data name="Please enter {0} value" xml:space="preserve">
+    <value>لطفا {0} را وارد نمایید</value>
   </data>
 </root>

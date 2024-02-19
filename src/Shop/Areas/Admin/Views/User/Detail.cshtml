@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = ViewLocalizer["Detail User"];
+}
+@model User
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4 ">Id:</dt>
+                <dd class="col-sm-6 border p-2 rounded">@Model.Id</dd>
+                <dt class="col-sm-4">Username:</dt>
+                <dd class="col-sm-6 border p-2 rounded">@Model.UserName</dd>
+                <dt class="col-sm-4">Email:</dt>
+                <dd class="col-sm-6 border p-2 rounded">@Model.Email</dd>
+                <dt class="col-sm-4">Normalized Email:</dt>
+                <dd class="col-sm-6 border p-2 rounded">@Model.NormalizedEmail</dd>
+                <dt class="col-sm-4">Created Date:</dt>
+                <dd class="col-sm-6 border p-2 rounded">@Model.CreateDateTime.ToString()</dd>
+                <dt class="col-sm-4">First Name:</dt>
+                <dd class="col-sm-6 border p-2 rounded">@Model.FirstName</dd>
+                <dt class="col-sm-4">Last Name:</dt>
+                <dd class="col-sm-6 border p-2 rounded">@Model.LastName</dd>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4">Phone Number:</dt>
+                <dd class="col-sm-6 border p-2 rounded">@Model.PhoneNumber</dd>
+                <dt class="col-sm-4">Phone Number Confirmed:</dt>
+                <dd class="col-sm-6 border p-2 rounded">@Model.PhoneNumberConfirmed.ToString()</dd>
+                <dt class="col-sm-4">Two Factor Enabled:</dt>
+                <dd class="col-sm-6 border p-2 rounded">@Model.TwoFactorEnabled.ToString()</dd>
+                <dt class="col-sm-4">Lockout End:</dt>
+                <dd class="col-sm-6 border p-2 rounded">@Model.LockoutEnd</dd>
+                <dt class="col-sm-4">Lockout Enabled:</dt>
+                <dd class="col-sm-6 border p-2 rounded">@Model.LockoutEnabled.ToString()</dd>
+                <dt class="col-sm-4">Access Failed Count:</dt>
+                <dd class="col-sm-6 border p-2 rounded">@Model.AccessFailedCount</dd>
+            </dl>
+        </div>
+    </div>
+
+
+
+</div>

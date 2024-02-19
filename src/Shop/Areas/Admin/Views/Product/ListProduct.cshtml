@@ -1,0 +1,20 @@
+﻿@{
+	ViewData["Title"] = "List Product";
+}
+@model List<Product>
+<a asp-asp-area="Admin" asp-asp-controller="Product" asp-action="Create">@ViewLocalizer["Create"]</a>
+<div>
+	@foreach (var item in Model)
+	{
+		<span class="border">
+
+			<p>item.Title</p>
+			<p>item.Description</p>
+			<p>item.Manufacturer</p>
+			<p>item.Price</p>
+			<p>item.Brand</p>
+			<p>item.Color</p>
+			<p>item.Weight</p>
+		</span>
+	}
+</div>

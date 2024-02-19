@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Tilte"] = ViewLocalizer["User"];
+}
+
+@model List<User>
+
+<a asp-area="Admin" asp-controller="User" asp-action="Create" class="btn btn-outline-primary">@ViewLocalizer["Create"]</a>
+<br />
+@if (ViewData["Message"] != null)
+{
+    <span class="text-danger">@ViewData["Message"]</span>
+}
+<br />
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>@ViewLocalizer["Id"]</th>
+            <th>@ViewLocalizer["UserName"]</th>
+            @* <th>@ViewLocalizer["NormalizedUserName"]</th> *@
+            <th>@ViewLocalizer["Email"]</th>
+            @* <th>@ViewLocalizer["NormalizedEmail"]</th> *@
+            <th>@ViewLocalizer["EmailConfirmed"]</th>
+            <th>@ViewLocalizer["CreateDateTime"]</th>
+            <th>@ViewLocalizer["FirstName"]</th>
+            <th>@ViewLocalizer["LastName"]</th>
+            @* <th>@ViewLocalizer["Password"]</th> *@
+            @* <th>@ViewLocalizer["PasswordHash"]</th> *@
+            @* <th>@ViewLocalizer["SecurityStamp"]</th> *@
+            @* <th>@ViewLocalizer["ConcurrencyStamp"]</th> *@
+            <th>@ViewLocalizer["PhoneNumber"]</th>
+            @* <th>@ViewLocalizer["PhoneNumberConfirmed"]</th> *@
+            @* <th>@ViewLocalizer["TwoFactorEnabled"]</th> *@
+            @* <th>@ViewLocalizer["LockoutEnd"]</th> *@
+            @* <th>@ViewLocalizer["AccessFailedCount"]</th> *@
+            <th>@ViewLocalizer["Delete"]</th>
+            <th>@ViewLocalizer["Edit"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.UserName</td>
+                @* <td>@item.NormalizedUserName</td> *@
+                <td>@item.Email</td>
+                @* <td>@item.NormalizedEmail</td> *@
+                <td>@item.EmailConfirmed</td>
+                <td>@item.CreateDateTime</td>
+                <td>@item.FirstName</td>
+                <td>@item.LastName</td>
+                @* <td>@ViewLocalizer["Password is Hashed and can not showed"]</td> *@
+                @* <td style="text-size=3px;">@item.PasswordHash</td> *@
+                @* <td>@item.SecurityStamp</td> *@
+                @* <td>@item.ConcurrencyStamp</td> *@
+                <td>@item.PhoneNumber</td>
+                @* <td>@item.PhoneNumberConfirmed</td> *@
+                @* <td>@item.TwoFactorEnabled</td> *@
+                @* <td>@item.LockoutEnd</td> *@
+                @* <td>@item.LockoutEnabled</td> *@
+                @* <td>@item.AccessFailedCount</td> *@
+                <td>
+                    <form method="post" asp-area="Admin" asp-controller="User" asp-action="Delete">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button class="btn btn-outline-danger" type="submit">@ViewLocalizer["Delete"]</button>
+                    </form>
+                </td>
+                <td><a asp-area="Admin" asp-controller="User" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">@ViewLocalizer["Edit"]</a></td>
+                <td><a asp-area="Admin" asp-controller="User" asp-action="DEtail" asp-route-id="@item.Id" class="btn btn-outline-primary">@ViewLocalizer["DEtail"]</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

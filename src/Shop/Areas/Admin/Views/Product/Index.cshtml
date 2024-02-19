@@ -1,7 +1,69 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+	ViewData["Title"] = @ViewLocalizer["List Product"];
 }
+@model List<Product>
+<h1>@ViewLocalizer["List Product"]</h1>
 
-<h1>Index</h1>
+<a asp-area="Admin" asp-controller="Product" asp-action="Create" class="btn btn-outline-primary">@ViewLocalizer["Create"]</a>
 
+
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>@ViewLocalizer["Id"]</th>
+			<th>@ViewLocalizer["Title"]</th>
+			<th>@ViewLocalizer["Slug"]</th>
+			<th>@ViewLocalizer["Description"]</th>
+			<th>@ViewLocalizer["Price"]</th>
+			<th>@ViewLocalizer["Quantity"]</th>
+			<th>@ViewLocalizer["Status"]</th>
+			<th>@ViewLocalizer["Color"]</th>
+			<th>@ViewLocalizer["Model"]</th>
+			<th>@ViewLocalizer["Weight"]</th>
+			<th>@ViewLocalizer["Manufacturer"]</th>
+			<th>@ViewLocalizer["Brand"]</th>
+			<th>@ViewLocalizer["Tags"]</th>
+			<th>@ViewLocalizer["Categoriy"]</th>
+			<th>@ViewLocalizer["Comments"]</th>
+			<th>@ViewLocalizer["Delete"]</th>
+			<th>@ViewLocalizer["Edit"]</th>
+			<th>@ViewLocalizer["DEtail"]</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@item.Id</td>
+				<td>@item.Title</td>
+				<td>@item.Slug</td>
+				<td>@item.Description</td>
+				<td>@item.Price</td>
+				<td>@item.Quantity</td>
+				<td>@item.Status</td>
+				<td>@item.Color</td>
+				<td>@item.Model</td>
+				<td>@item.Weight</td>
+				<td>@item.Manufacturer</td>
+				<td>@item.Brand</td>
+				<td>
+					@* @item.Tags *@
+			 		@foreach (var tag in item.Tags)
+					{
+						<h2>@tag.Name</h2>
+					}
+				</td>
+				<td>@item.Categoriy</td>
+				<td>@item.Comments</td>
+				<td>
+					<form method="post" asp-area="Admin" asp-controller="Prodcut" asp-action="Delete">
+						<input type="hidden" name="id" value="@item.Id" />
+						<button class="btn btn-outline-danger" type="submit">@ViewLocalizer["Delete"]</button>
+					</form>
+				</td>
+				<td><a asp-area="Admin" asp-controller="Prodcut" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">@ViewLocalizer["Edit"]</a></td>
+				<td><a asp-area="Admin" asp-controller="Prodcut" asp-action="DEtail" asp-route-id="@item.Id" class="btn btn-outline-primary">@ViewLocalizer["DEtail"]</a></td>
+			</tr>
+		}
+	</tbody>
+</table>

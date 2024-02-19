@@ -1,0 +1,16 @@
+﻿@{
+	ViewData["Title"] = ViewLocalizer["Detail Tag"];
+}
+@model TagViewModel
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Name</h5>
+                <p class="card-text">@Model.Name</p>
+                <a asp-area="Admin" asp-controller="Tag" asp-action="Index">@ViewLocalizer["Return to Index"]</a>
+            </div>
+        </div>
+    </div>
+</div>

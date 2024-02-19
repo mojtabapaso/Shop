@@ -1,0 +1,39 @@
+﻿@{
+	ViewData["Tilte"] = ViewLocalizer["Brand"];
+}
+
+@model List<Brand>
+
+<a asp-area="Admin" asp-controller="Brand" asp-action="Create" class="btn btn-outline-primary">@ViewLocalizer["Create"]</a>
+<br />
+@if (ViewData["Message"] != null)
+{
+    <span class="text-danger">@ViewData["Message"]</span>
+}
+<br />
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>@ViewLocalizer["Delete"]</th>
+            <th>@ViewLocalizer["Edit"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>
+                    <form method="post" asp-area="Admin" asp-controller="Brand" asp-action="Delete">
+                    <input type="hidden" name="id" value="@item.Id" />
+                    <button class="btn btn-outline-danger" type="submit">@ViewLocalizer["Delete"]</button>
+                </form>
+                </td>
+                <td><a asp-area="Admin" asp-controller="Brand" asp-action="Edit" asp-route-id="@item.Id">@ViewLocalizer["Edit"]</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

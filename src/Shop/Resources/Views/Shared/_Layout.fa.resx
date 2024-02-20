@@ -127,7 +127,7 @@
     <value>ورود</value>
   </data>
   <data name="Logout" xml:space="preserve">
-    <value>خورج از حساب کاربری</value>
+    <value>خروج از حساب کاربری</value>
   </data>
   <data name="ltr" xml:space="preserve">
     <value>rtl</value>

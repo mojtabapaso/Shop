@@ -2,17 +2,23 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Shop.DataLayer.SeedData;
 using Shop.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace Shop.DataLayer.context;
 
-public class ShopDbContext : IdentityDbContext<User,IdentityRole<string>,string>, IUnitOfWork
+public class ShopDbContext : IdentityDbContext<User,Role,string>, IUnitOfWork
 {
 	public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options) { }
 
 	public DbSet<User> Users { get; set; }
+	public DbSet<Role> Roles { get; set; }
 	public DbSet<Product> Products { get; set; }
+	public DbSet<Category> Categories { get; set; }
 	public DbSet<Tag> Tags { get; set; }
+	public DbSet<Brand> Brands { get; set; }
+	public DbSet<Comment> Comments { get; set; }
+	public DbSet<Order> Orders { get; set; }
+	public DbSet<ItemCart> ItemCarts { get; set; }
+	public DbSet<Address> Addresses { get; set; }
 
 	public void MarkAsDeleted<TEntity>(TEntity entity)
 	{
@@ -26,6 +32,7 @@ public class ShopDbContext : IdentityDbContext<User,IdentityRole<string>,string>
 	{
 		return base.SaveChanges();
 	}
+
 
 	public Task<int> SaveChangesAsync()
 	{

@@ -5,11 +5,11 @@ using Shop.Entities;
 
 namespace Shop.DataLayer.SeedData;
 
-public class RoleConfiguration : IEntityTypeConfiguration<IdentityRole<string>>
+public class RoleConfiguration : IEntityTypeConfiguration<Role>
 {
-	public void Configure(EntityTypeBuilder<IdentityRole<string>> builder)
+	public void Configure(EntityTypeBuilder<Role> builder)
 	{
-		var role = new IdentityRole<string>
+		var role = new Role
 		{
 			Id = "1",
 			Name = "Admin",

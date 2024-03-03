@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Shop.Areas.Admin.Controllers;
 
-//[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin")]
 [Area(AreaConstants.AdminArea)]
 
 public class HomeController : Controller

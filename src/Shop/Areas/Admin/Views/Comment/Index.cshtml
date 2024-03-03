@@ -1,0 +1,12 @@
+﻿@{
+	ViewData["Title"] = "List Commnet";
+}
+@model List<Comment>;
+
+@foreach (var comment in Model)
+{
+<p>@comment.Text</p>	
+<p>@comment.Created</p>	
+<p>@comment.IsPublished</p>	
+<p>@comment.IsSubCommnet</p>	
+}

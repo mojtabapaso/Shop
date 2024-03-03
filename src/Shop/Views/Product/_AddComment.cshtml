@@ -1,0 +1,17 @@
+﻿@model Shop.ViewModels.CommentViewModel
+<div class="row">
+	<div class="col-md-4">
+		<form asp-controller="Commnet" asp-action="Create">
+			<div asp-validation-summary="ModelOnly"></div>
+
+			<label asp-for="Text" class="control-label"></label>
+			<input asp-for="Text" class="form-control">
+			<span asp-validation-for="Text" class="text-danger"></span>
+
+			<input asp-for="ProductId" type="hidden" value="@ViewData["ProductId"]">
+
+			<button type="submit" class="btn btn-primary">ثبت نظر</button>
+		</form>
+
+	</div>
+</div>	

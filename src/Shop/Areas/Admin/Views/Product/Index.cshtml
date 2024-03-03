@@ -36,7 +36,6 @@
 			<tr>
 				<td>@item.Id</td>
 				<td>@item.Title</td>
-				<td>@item.Slug</td>
 				<td>@item.Description</td>
 				<td>@item.Price</td>
 				<td>@item.Quantity</td>
@@ -47,23 +46,43 @@
 				<td>@item.Manufacturer</td>
 				<td>@item.Brand</td>
 				<td>
-					@* @item.Tags *@
-			 		@foreach (var tag in item.Tags)
+					@foreach (var tag in item.Tags)
 					{
-						<h2>@tag.Name</h2>
+						<span>@tag.Name</span>
 					}
 				</td>
-				<td>@item.Categoriy</td>
-				<td>@item.Comments</td>
 				<td>
-					<form method="post" asp-area="Admin" asp-controller="Prodcut" asp-action="Delete">
+					@if (item.Category != null)
+					{
+						<sapn>@item.Category.Name</sapn>
+					}
+					else
+					{
+						<sapn>Not found any category </sapn>
+					}
+				</td>
+				<td>
+					@if (item.Comments != null)
+					{
+						@foreach (var comment in item.Comments)
+						{
+							<sapn>@comment.Text </sapn>
+						}
+					}
+					else
+					{
+						<sapn>Not found any comment</sapn>
+					}
+				</td>
+				<td>
+					<form asp-area="Admin" asp-controller="Prodcut" asp-action="Delete" method="post">
 						<input type="hidden" name="id" value="@item.Id" />
 						<button class="btn btn-outline-danger" type="submit">@ViewLocalizer["Delete"]</button>
 					</form>
 				</td>
 				<td><a asp-area="Admin" asp-controller="Prodcut" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">@ViewLocalizer["Edit"]</a></td>
-				<td><a asp-area="Admin" asp-controller="Prodcut" asp-action="DEtail" asp-route-id="@item.Id" class="btn btn-outline-primary">@ViewLocalizer["DEtail"]</a></td>
+				<td><a  asp-controller="Prodcut" asp-action="Detail" asp-route-id="@item.Id" class="btn btn-outline-primary">@ViewLocalizer["Detail"]</a></td>
 			</tr>
 		}
 	</tbody>
-</table>
+</table>	

@@ -17,41 +17,6 @@ namespace Shop.DataLayer.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.15");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<string>", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
-
-                    b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            ConcurrencyStamp = "b35494cf-4040-47e3-a6de-dee4b6f8e250",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        });
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -161,16 +126,200 @@ namespace Shop.DataLayer.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Shop.Entities.Product", b =>
+            modelBuilder.Entity("ProductTag", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("ProductsId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Brand")
+                    b.Property<string>("TagsId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ProductsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("ProductTag");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Address", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HouseNumber")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("OrderId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Addresses");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Brand", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Brands");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Category", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CategoryId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsSubCategory")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Comment", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CommentId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsSubCommnet")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ProductId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Shop.Entities.ItemCart", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OrderId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProductId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ItemCarts");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Order", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsPament")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TotalPrice")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Product", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BrandId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CategoryId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Color")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
@@ -178,11 +327,16 @@ namespace Shop.DataLayer.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Manufacturer")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Model")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Price")
@@ -190,10 +344,6 @@ namespace Shop.DataLayer.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
@@ -208,12 +358,52 @@ namespace Shop.DataLayer.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Role", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            ConcurrencyStamp = "b35494cf-4040-47e3-a6de-dee4b6f8e250",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Shop.Entities.Tag", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -221,12 +411,7 @@ namespace Shop.DataLayer.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ProductId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("Tags");
                 });
@@ -310,7 +495,7 @@ namespace Shop.DataLayer.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e28a340d-9f7a-40fe-9f79-83c12a74ff32",
+                            ConcurrencyStamp = "4b5316d5-f711-4e3e-8687-0d8f3b12a1e7",
                             CreateDateTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "Admin@Admin.com",
                             EmailConfirmed = true,
@@ -319,10 +504,10 @@ namespace Shop.DataLayer.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "MASTERADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBD9Bl0kiEqiKI62JdM/q9tzxyiN9+3T8BDG3xV2ZfOzHWhfUxeSXCQ7i5QaxCklBg==",
-                            PhoneNumber = "XXXXXXXXXXXXX",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKNmLwukFL4AgmtiPPDdYJ472h7OsXUQzsZtmZ7I36cM+kUba3nGF051d4Z8ZaL3Hg==",
+                            PhoneNumber = "09111111111",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "00000000-0000-0000-0000-000000000000",
+                            SecurityStamp = "63137220-48ad-4f5f-ae12-25d9da40451c",
                             TwoFactorEnabled = false,
                             UserName = "masteradmin"
                         });
@@ -330,7 +515,7 @@ namespace Shop.DataLayer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>", null)
+                    b.HasOne("Shop.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -357,7 +542,7 @@ namespace Shop.DataLayer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>", null)
+                    b.HasOne("Shop.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -379,16 +564,133 @@ namespace Shop.DataLayer.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Shop.Entities.Tag", b =>
+            modelBuilder.Entity("ProductTag", b =>
                 {
                     b.HasOne("Shop.Entities.Product", null)
-                        .WithMany("Tags")
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Shop.Entities.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Shop.Entities.Address", b =>
+                {
+                    b.HasOne("Shop.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId");
+
+                    b.HasOne("Shop.Entities.User", "User")
+                        .WithMany("Addresses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Category", b =>
+                {
+                    b.HasOne("Shop.Entities.Category", null)
+                        .WithMany("SubCategories")
+                        .HasForeignKey("CategoryId");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Comment", b =>
+                {
+                    b.HasOne("Shop.Entities.Comment", null)
+                        .WithMany("SubComments")
+                        .HasForeignKey("CommentId");
+
+                    b.HasOne("Shop.Entities.Product", "Product")
+                        .WithMany("Comments")
                         .HasForeignKey("ProductId");
+
+                    b.HasOne("Shop.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Shop.Entities.ItemCart", b =>
+                {
+                    b.HasOne("Shop.Entities.Order", null)
+                        .WithMany("ItemsCart")
+                        .HasForeignKey("OrderId");
+
+                    b.HasOne("Shop.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Order", b =>
+                {
+                    b.HasOne("Shop.Entities.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Shop.Entities.Product", b =>
                 {
-                    b.Navigation("Tags");
+                    b.HasOne("Shop.Entities.Brand", "Brand")
+                        .WithMany("Brands")
+                        .HasForeignKey("BrandId");
+
+                    b.HasOne("Shop.Entities.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId");
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Brand", b =>
+                {
+                    b.Navigation("Brands");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Category", b =>
+                {
+                    b.Navigation("Products");
+
+                    b.Navigation("SubCategories");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Comment", b =>
+                {
+                    b.Navigation("SubComments");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Order", b =>
+                {
+                    b.Navigation("ItemsCart");
+                });
+
+            modelBuilder.Entity("Shop.Entities.Product", b =>
+                {
+                    b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("Shop.Entities.User", b =>
+                {
+                    b.Navigation("Addresses");
+
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,9 @@
 ﻿@{
 	ViewData["Title"] = "محصولات";
 }
-@model List<Product>
+@using Shop.ViewModels.Admin
+
+@model List<ProductViewModel>
    
 <h2>Search Results</h2>
 
@@ -16,7 +18,7 @@
                 <h2>@product.Price</h2>
                 <p>@product.Description</p>
 
-                @* <a href="@product.Url">Details</a> *@
+                <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id">جزییات</a>
             </li>
         }
     </ul>

@@ -1,155 +1,170 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NuGet.Packaging;
 using Shop.DataLayer.context;
 using Shop.Entities;
-using Shop.Services.Contracts.EntityContracts;
+using Shop.Services;
+using Shop.Services.Contracts;
+using Shop.Services.EntityContracts;
 using Shop.ViewModels.Admin;
 
 namespace Shop.Areas.Admin.Controllers;
 
-//[Authorize(Roles = "Admin")]
 [Area(AreaConstants.AdminArea)]
 
+//[Authorize(Roles = "Admin")]
+//  Admin/Product
 public class ProductController : Controller
 {
-	private readonly IProductServisec productServisec;
+    private readonly IProductServisec productServisec;
+	private readonly IMapper mapper;
 	private readonly IBrandServisec brandServisec;
-	private readonly ICategoryServisec categoryServisec;
-	private readonly ITagServisec tagServisec;
-	private readonly IUnitOfWork uow;
+    private readonly IAws3Services aws3Services;
+    private readonly ICategoryServisec categoryServisec;
+    private readonly ITagServisec tagServisec;
+    private readonly IUnitOfWork uow;
 
-	public ProductController(IProductServisec productServisec, IBrandServisec brandServisec,ICategoryServisec categoryServisec,
-		ITagServisec tagServisec,
-		IUnitOfWork uow)
 
-	{
-		this.productServisec = productServisec;
+    public ProductController(IProductServisec productServisec,
+        IMapper mapper,
+        IBrandServisec brandServisec,
+        IAws3Services aws3Services,
+        ICategoryServisec categoryServisec,
+        ITagServisec tagServisec,
+        IUnitOfWork uow)
+    {
+        this.productServisec = productServisec;
+		this.mapper = mapper;
 		this.brandServisec = brandServisec;
-		this.categoryServisec = categoryServisec;
-		this.tagServisec = tagServisec;
-		this.uow = uow;
-	}
-	public IActionResult Index()
-	{
-		var products = productServisec.GetAll();
-		return View(products);
-	}
+        this.aws3Services = aws3Services;
+        this.categoryServisec = categoryServisec;
+        this.tagServisec = tagServisec;
+        this.uow = uow;
+    }
+	//[HttpGet]
+	public async Task<IActionResult> Index()
+    {
+        var products = await productServisec.GetAllWithAllRelatedModelsAsync();
 
-	[HttpGet]
-	public IActionResult ListProduct()
-	{
-		var products = productServisec.GetAll();
-		return View(products);
-	}
+        return View(products);
+    }
 
-	[HttpGet]
-	public IActionResult Details(string id)
-	{
+    //[HttpGet]
+    public IActionResult Detail(string id)
+    {
 
-		var product = productServisec.FindById(id);
-		return View(product);
-	}
+        var product = productServisec.FindById(id);
+        var mapProduct = mapper.Map<Product>(product);
 
-	public async Task<IActionResult> Create()
-	{
-		var tags = await tagServisec.GetAllAsync();
+		return View(mapProduct);
+    }
 
-		var model = new ProductViewModel
-		{
-			Tags = tags.Select(t => new SelectListItem
-			{
-				Text = t.Name,
-				Value = t.Id,
-			}).ToList(),
-		};
+    public async Task<IActionResult> Create()
+    {
+        var tags = await tagServisec.GetAllAsync();
 
-		return View(model);
-	}
+        var model = new ProductViewModel
+        {
+            Tags = tags.Select(t => new SelectListItem
+            {
+                Text = t.Name,
+                Value = t.Id,
+            }).ToList(),
+        };
+
+        return View(model);
+    }
 
 
-	[HttpPost]
-	[ValidateAntiForgeryToken]
-	public async Task<IActionResult> Create(ProductViewModel productViewModel)
-	{
-		if (!ModelState.IsValid)
-		{
-			return View(productViewModel);
-		}
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(ProductViewModel productViewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(productViewModel);
+        }
 		var product = new Product
-		{
-			Id = Guid.NewGuid().ToString(),
-			Title = productViewModel.Title,
-			Description = productViewModel.Description,
-			Price = productViewModel.Price,
-			Quantity = productViewModel.Quantity,
-			Status = productViewModel.Status,
-			Color = productViewModel.Color,
-			Model = productViewModel.Model,
-			Weight = productViewModel.Weight,
-			Manufacturer = productViewModel.Manufacturer,
-		};
-		List<Tag> listTag = new List<Tag>();
-		foreach (var tagId in productViewModel.Tag)
-		{
-			var tag = await tagServisec.FindByIdAsync(tagId);
-			if (tag != null)
-			{
-				listTag.Add(tag);
-			}
-			else
-			{
-				return NotFound();
-			}
-		}
+        {
+            Id = Guid.NewGuid().ToString(),
+            Title = productViewModel.Title,
+            Description = productViewModel.Description,
+            Price = productViewModel.Price,
+            Quantity = productViewModel.Quantity,
+            Status = productViewModel.Status,
+            Color = productViewModel.Color,
+            Model = productViewModel.Model,
+            Weight = productViewModel.Weight,
+            Manufacturer = productViewModel.Manufacturer,
+        };
+        var ss = await aws3Services.UploadFileAsync(productViewModel.ImageFile);
+        product.ImagePath = ss;
 
-		//product.Brand = await brandServisec.FindByIdAsync(productViewModel.Brand);
-		//product.SlugGenerator();
-
+        List<Tag> listTag = new List<Tag>();
+        foreach (var tagId in productViewModel.Tag)
+        {
+            var tag = await tagServisec.FindByIdAsync(tagId);
+            if (tag != null)
+            {
+                listTag.Add(tag);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+		product.Brand = await brandServisec.FindByIdAsync(productViewModel.Brand);
 		product.Tags.AddRange(listTag);
-		productServisec.Add(product);
-		var resultSvae = await uow.SaveChangesAsync();
-		return RedirectToAction(nameof(Index));
-	}
+        productServisec.Add(product);
+         
+        var resultSvae = await uow.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
 
-	public IActionResult Edit(int id)
-	{
-		return View();
-	}
+    public async Task<IActionResult> Edit(string id)
+    {
+        var product = await productServisec.FindByIdWithAllRelatedModelsAsync(id);
+        return View(product);
+    }
 
-	// POST: ProductController/Edit/5
-	//[HttpPost]
-	//[ValidateAntiForgeryToken]
-	//public IActionResult Edit(int id, IFormCollection collection)
-	//{
-	//    try
-	//    {
-	//        return RedirectToAction(nameof(Index));
-	//    }
-	//    catch
-	//    {
-	//        return View();
-	//    }
-	//}
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Edit(int id, IFormCollection collection)
+    {
+        try
+        {
+            return RedirectToAction(nameof(Index));
+        }
+        catch
+        {
+            return View();
+        }
+    }
 
-	// GET: ProductController/Delete/5
-	public IActionResult Delete(int id)
-	{
-		return View();
-	}
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(string id)
+    {
+        productServisec.Remove(id);
+        await uow.SaveChangesAsync();
 
-	//// POST: ProductController/Delete/5
-	//[HttpPost]
-	//[ValidateAntiForgeryToken]
-	//public IActionResult Delete(int id, IFormCollection collection)
-	//{
-	//    try
-	//    {
-	//        return RedirectToAction(nameof(Index));
-	//    }
-	//    catch
-	//    {
-	//        return View();
-	//    }
-	//}
+        return RedirectToAction(nameof(Index));
+    }
+
+    //// POST: ProductController/Delete/5
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //public IActionResult Delete(int id, IFormCollection collection)
+    //{
+    //    try
+    //    {
+    //        return RedirectToAction(nameof(Index));
+    //    }
+    //    catch
+    //    {
+    //        return View();
+    //    }
+    //}
 }

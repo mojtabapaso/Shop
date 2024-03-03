@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Shop.Services.EntityContracts
+@{
 	ViewData["Title"] = "Create Product";
 	@inject ITagServisec tagServisec
 	@model ProductViewModel
@@ -9,7 +10,7 @@
 <hr />
 <div class="row">
 	<div class="col-md-4">
-		<form asp-area="Admin" asp-controller="Product" asp-action="Create" method="post">
+		<form asp-area="Admin" asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 			<div class="form-group">
@@ -34,7 +35,15 @@
 				<label asp-for="Quantity" class="control-label"></label>
 				<input asp-for="Quantity" class="form-control" />
 				<span asp-validation-for="Quantity" class="text-danger"></span>
-			</div
+			</div>
+
+			<div class="form-group">
+				<label asp-for="ImageFile">Select Image:</label>
+				<br>
+				<input asp-for="ImageFile" type="file"  >
+
+				<span asp-validation-for="Color" class="text-danger"></span>
+			</div>
 
 			<div class="form-group">
 				<label asp-for="Color" class="control-label"></label>
@@ -61,9 +70,8 @@
 
 			<div class="form-group">
 				<select class="form-select-sm" asp-for="Tag" asp-items="@Model.Tags" multiple></select>
-			<div class="mt-4">
-			
 			</div>
+			
 
 			<div class="form-group">
 				<label asp-for="Weight" class="control-label"></label>

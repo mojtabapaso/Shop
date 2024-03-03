@@ -1,0 +1,67 @@
+﻿@{
+	ViewData["Tilte"] = "Payment";
+	var totalPriceCart = TempData["TotalPrice"];
+}
+@model List<Address>
+@if(Model.Any())
+{
+	@foreach (var item in Model)
+	{
+		<p>@item.Title</p>
+		<p>@item.PostalCode</p>
+	}
+}else
+{
+	<p>Address is not found please create a one</p>
+}
+
+	<a asp-controller="Address" asp-action="Create" class="btn btn-dark">Create Address</a>
+<br\>
+
+
+<p>Total Price : </p><p id="total-price">@totalPriceCart</p>
+<p id="text-warning"></p>
+<form id="coupon-form" asp-controller="Order" asp-action="Coupon">
+	<input type="coupon" name="coupon" type="text" />
+	<input type="submit" value="send" />
+
+</form>
+@section Scripts {
+
+	@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+	<script type="text/javascript">
+		$(function () {
+			$("#coupon-form").submit(function (e) {
+				e.preventDefault();
+
+				var couponValue = $("input[name='coupon']").val();
+				$.ajax({
+					url: "/Order/Coupon",
+					type: "POST",
+					data: { coupon: couponValue },
+					dataType: "json",
+					success: function (response) {
+						var wasInvalid = false;
+						if (response === false && !wasInvalid) {
+							$("#text-warning").text("coupon is invalid !!! ").fadeOut(4000);
+							wasInvalid = true;
+						}
+						else if (response === true) {
+							var totalPrice = parseInt($("#total-price").text());
+							totalPrice -= 1;
+							$("#total-price").text(totalPrice);
+							$("#text-warning").text("coupon is cussess !!! ").fadeOut();
+
+							wasInvalid = true;
+
+						};
+					},
+					error: function () {
+						alert("خطایی رخ داده است!");
+					}
+				});
+			});
+		});
+	</script>
+
+}

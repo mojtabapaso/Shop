@@ -3,7 +3,7 @@ using Shop.DataLayer.context;
 using Shop.Entities;
 using Shop.services.Contracts;
 
-namespace Shop.services.EFServices;
+namespace Shop.Services.EFServices;
 
 public class GenericServices<TEntity> : IGenericServices<TEntity> where TEntity : BaseEntitiy, new()
 {
@@ -20,10 +20,10 @@ public class GenericServices<TEntity> : IGenericServices<TEntity> where TEntity 
 
     public async Task AddAsync(TEntity entity)
        => await _entity.AddAsync(entity);
-    public TEntity FindById(int id)
+    public TEntity FindById(string id)
         => _entity.Find(id);
 
-    public async Task<TEntity> FindByIdAsync(int id)
+    public async Task<TEntity> FindByIdAsync(string id)
         => await _entity.FindAsync(id);
 
     public List<TEntity> GetAll()
@@ -38,12 +38,12 @@ public class GenericServices<TEntity> : IGenericServices<TEntity> where TEntity 
     public void Remove(string Id)
     {
         // var tEntity = new TEntity() { Id = Id };
-        
+
         var tEntity = new TEntity();
         var idProperty = typeof(TEntity).GetProperty("Id");
         if (idProperty != null)
         {
-            idProperty.SetValue(tEntity, Id, null); 
+            idProperty.SetValue(tEntity, Id, null);
         }
 
         uow.MarkAsDeleted(tEntity);

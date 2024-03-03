@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <PackageReference Include="AutoMapper" Version="13.0.1" />
+	  <PackageReference Include="AWSSDK.Core" Version="3.7.302.13" />
+	  <PackageReference Include="AWSSDK.S3" Version="3.7.305.28" />
+	  <PackageReference Include="CoreAdmin" Version="2.7.1" />
+	  <PackageReference Include="DotNetEnv" Version="3.0.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Localization" Version="2.2.0" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.15" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.15" />
@@ -23,7 +28,7 @@
     <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.15" />
     <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="7.0.15" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.12" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,9 +41,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Resources\Shop\" />
+    <EmbeddedResource Update="Resources\Shop.Services\MongoServices\MongoCartServices.fa.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

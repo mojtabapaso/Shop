@@ -1,0 +1,17 @@
+﻿@{
+	ViewData["Title"] = "List Address";
+}
+@model List<AddressViewModel>
+<h2>List Address</h2>
+@foreach(var item in Model)
+{
+	@item.Title
+	<br />
+	@item.Text
+	<br />
+
+	@item.PostalCode
+	<br />
+
+	@item.HouseNumber
+}

@@ -1,10 +1,13 @@
 ﻿using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Common.Generator;
 using Shop.DataLayer.context;
 using Shop.Entities;
 using Shop.services.Contracts;
+using Shop.Services.Contracts.MongoContracts;
+using Shop.Services.EFServices.Identity;
 using Shop.ViewModels.Account;
 
 namespace Shop.Controllers;
@@ -21,13 +24,13 @@ public class AccountController : Controller
 
 	public AccountController(
 	CustomeUserManager userManager,
-
 	IKaveNegarServic kaveNegarServic,
 	IConfiguration configuration,
 	IUnitOfWork uow,
 	IMongoDbAuthenticationServices mongoDbAuthenticationServices,
 	ILogger<AccountController> logger,
 	SignInManager<User> signInManager)
+
 	{
 		this.userManager = userManager;
 		this.kaveNegarServic = kaveNegarServic;
@@ -54,24 +57,30 @@ public class AccountController : Controller
 	[HttpPost]
 	public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
 	{
-		List<string> errors = new List<string>();
-		if (ModelState.IsValid)
+		if (!ModelState.IsValid)
 		{
-			string code = GeneratorRandomeCode.RandomeCode(6);
-			kaveNegarServic.SendCodeToPhoneNumber(code, registerViewModel.PhoneNumber);
-			await mongoDbAuthenticationServices.CreateAuthUserAsync(registerViewModel.PhoneNumber, code);
-
-			return RedirectToAction(nameof(RegisterOTPCode), new { phoneNumber = registerViewModel.PhoneNumber });
+			return View(registerViewModel);
 
 		}
-		return BadRequest(errors);
+		var user = await userManager.FindByPhoneNumberAsync(registerViewModel.PhoneNumber);
+		if (user != null)
+		{
+			ModelState.AddModelError(string.Empty, "User already exist");
+			return View(registerViewModel);
+		}
+
+		string code = GeneratorRandomeCode.RandomeCode(6);
+		kaveNegarServic.SendCodeToPhoneNumber(code, registerViewModel.PhoneNumber);
+		await mongoDbAuthenticationServices.CreateAuthUserAsync(registerViewModel.PhoneNumber, code);
+
+		return RedirectToAction(nameof(RegisterOTPCode), new { phoneNumber = registerViewModel.PhoneNumber });
 	}
 	[HttpGet]
 	public IActionResult RegisterOTPCode(string phoneNumber)
 	{
 		if (phoneNumber == null)
 		{
-			return BadRequest();
+			return View(nameof(Register));
 		}
 		ViewData["phoneNumber"] = phoneNumber;
 		return View();
@@ -81,32 +90,44 @@ public class AccountController : Controller
 	[HttpPost, ValidateAntiForgeryToken]
 	public async Task<IActionResult> RegisterOTPCode(CodeOTPViewModel codeOTPViewModel)
 	{
-		if (ModelState.IsValid && await mongoDbAuthenticationServices.PhoneNumberIsValidAsync(codeOTPViewModel.PhoneNumber))
+		if (!ModelState.IsValid)
 		{
-			var otp = await mongoDbAuthenticationServices.GetUserByPhoneNumberAsync(codeOTPViewModel.PhoneNumber);
-			if (otp != null)
-			{
-				var phoneNumber = otp.GetElement("PhoneNumber").Value.AsString;
-				var code = otp.GetElement("Code").Value.AsString;
-				if (code == codeOTPViewModel.Code)
-				{
-					var user = new User()
-					{
-						UserName = phoneNumber,
-						PhoneNumber = phoneNumber,
-						PhoneNumberConfirmed = true,
-					};
-					await userManager.CreateAsync(user);
-					var ss = await uow.SaveChangesAsync();
-				}
-				else if (code != codeOTPViewModel.Code)
-				{
-					await mongoDbAuthenticationServices.AddTryAsync(codeOTPViewModel.PhoneNumber);
-					return View();
-				}
-			}
+			return View(codeOTPViewModel);
 		}
-		return BadRequest();
+		var validatePhoneNumbner = await mongoDbAuthenticationServices.PhoneNumberIsValidAsync(codeOTPViewModel.PhoneNumber);
+		if (validatePhoneNumbner == false)
+		{
+			ModelState.AddModelError(string.Empty, "Code is invalid");
+			return View(codeOTPViewModel);
+		}
+		var otp = await mongoDbAuthenticationServices.GetUserByPhoneNumberAsync(codeOTPViewModel.PhoneNumber);
+		if (otp == null)
+		{
+			ModelState.AddModelError(string.Empty, "Code is invalid");
+			return View(codeOTPViewModel);
+		}
+		var phoneNumber = otp.GetElement("PhoneNumber").Value.AsString;
+		var code = otp.GetElement("Code").Value.AsString;
+		if (code == codeOTPViewModel.Code)
+		{
+			var user = new User()
+			{
+				UserName = phoneNumber,
+				PhoneNumber = phoneNumber,
+				PhoneNumberConfirmed = true,
+			};
+			await userManager.CreateAsync(user);
+			await signInManager.SignInAsync(user, true, null);
+
+			await uow.SaveChangesAsync();
+		}
+		else if (code != codeOTPViewModel.Code)
+		{
+			await mongoDbAuthenticationServices.AddTryAsync(codeOTPViewModel.PhoneNumber);
+			ModelState.AddModelError(string.Empty, "Please try again , Code is invalid");
+			return View(codeOTPViewModel);
+		}
+		return RedirectToAction("Index", "Home");
 	}
 
 
@@ -115,8 +136,8 @@ public class AccountController : Controller
 	{
 		return View();
 	}
-	[HttpPost,ValidateAntiForgeryToken]
 
+	[HttpPost, ValidateAntiForgeryToken]
 	public async Task<IActionResult> Login(LoginViewModel loginViewModel)
 	{
 		if (!ModelState.IsValid)
@@ -124,7 +145,7 @@ public class AccountController : Controller
 		var user = await userManager.FindByPhoneNumberAsync(loginViewModel.PhoneNumber);
 		if (user == null)
 		{
-			ModelState.AddModelError("", "شمراه تلفن شما یافت نشد ");
+			ModelState.AddModelError(string.Empty, "Phone number is invalid.");
 			return View(loginViewModel);
 		}
 
@@ -139,7 +160,7 @@ public class AccountController : Controller
 	{
 		if (string.IsNullOrEmpty(phoneNumber))
 		{
-			return BadRequest();
+			return View("Error");
 		}
 		ViewData["phoneNumber"] = phoneNumber;
 		return View();
@@ -151,12 +172,88 @@ public class AccountController : Controller
 			return View(codeOTPViewModel);
 
 		var user = await userManager.FindByPhoneNumberAsync(codeOTPViewModel.PhoneNumber);
+		if (user is null)
+		{
+			ModelState.AddModelError(string.Empty, "User not found");
+			return View(codeOTPViewModel);
+		}
 		await signInManager.SignInAsync(user, true, null);
 		return RedirectToAction("Index", "Home");
 
 	}
+	[HttpGet]
+	public IActionResult LoginByPassword()
+	{
+		return View();
+	}
+	[HttpPost]
+	public async Task<IActionResult> LoginByPassword(LoginByPasswordViewModel loginByPasswordViewModel)
+	{
+		if (!ModelState.IsValid)
+		{
+			return View(loginByPasswordViewModel);
+		}
 
+		var user = await userManager.FindByPhoneNumberAsync(loginByPasswordViewModel.PhoneNumber);
 
+		if (user is null)
+		{
+			ModelState.AddModelError(string.Empty, "Invalid phone number or password.");
+			return View(loginByPasswordViewModel);
+		}
+
+		var signInResult = await signInManager.CheckPasswordSignInAsync(user, loginByPasswordViewModel.Password, false); // Use lockoutOnFailure: false
+
+		if (!signInResult.Succeeded)
+		{
+			ModelState.AddModelError(string.Empty, "Invalid phone number or password.");
+			return View(loginByPasswordViewModel);
+		}
+
+		await signInManager.SignInAsync(user, isPersistent: loginByPasswordViewModel.RememberMe);
+		return RedirectToAction("Index", "Home");
+
+	}
+
+	[Authorize]
+	[HttpGet]
+	public IActionResult ChangePassword()
+	{
+		return View();
+	}
+	[Authorize]
+	[HttpPost]
+	public async Task<IActionResult> ChangePassword(ChangePasswordViewModel changePasswordViewModel)
+	{
+		if (!ModelState.IsValid)
+		{
+			return View(changePasswordViewModel);
+		}
+
+		var user = await userManager.GetUserAsync(User);
+
+		if (!await userManager.CheckPasswordAsync(user, changePasswordViewModel.OldPassword))
+		{
+			ModelState.AddModelError("OldPassword", "رمز عبور فعلی اشتباه است.");
+			return View(changePasswordViewModel);
+		}
+
+		var result = await userManager.ChangePasswordAsync(user, changePasswordViewModel.OldPassword, changePasswordViewModel.NewPassword);
+
+		if (result.Succeeded)
+		{
+			await signInManager.SignInAsync(user, isPersistent: false);
+			return RedirectToAction("Index", "Home");
+		}
+		else
+		{
+			foreach (var error in result.Errors)
+			{
+				ModelState.AddModelError(string.Empty, error.Description);
+			}
+			return View(changePasswordViewModel);
+		}
+	}
 	public async Task<IActionResult> Logout()
 	{
 		await signInManager.SignOutAsync();

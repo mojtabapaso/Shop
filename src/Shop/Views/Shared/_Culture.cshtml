@@ -1,0 +1,13 @@
+﻿@using Microsoft.Extensions.Options
+@inject IOptions<RequestLocalizationOptions> option
+@{
+	var cultures = option.Value.SupportedUICultures.ToList();
+	var url = string.IsNullOrWhiteSpace(Context.Request.Path) ? "~/" : $"{Context.Request.Path.Value}{Context.Request.Query}";
+	var path = Context.Request.Path;
+}
+@foreach (var culture in cultures)
+{
+	@* <li class="nav-item"> *@
+	<a asp-controller="Home" asp-action="ChangeLanguage" asp-route-name="@culture" asp-route-returnUrl="@path">@culture.NativeName</a>
+
+}

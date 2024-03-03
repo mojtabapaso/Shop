@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Nest;
 using Shop.Entities;
-using Shop.Services.Contracts.EntityContracts;
+using Shop.Services.EFServices;
 using Shop.ViewModels.Category;
 
 namespace Shop.Areas.Admin.Controllers;
+[Authorize(Roles = "Admin")]
 
 public class CategoryController : Controller
 {

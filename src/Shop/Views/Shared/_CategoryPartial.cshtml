@@ -1,0 +1,26 @@
+﻿@using Shop.Services.Contracts
+
+@* @inject ICategoryServisec CategoryService
+
+@model CategoryViewModel
+@{
+	var category = await CategoryService.GetMainCategories();
+}
+
+@if (category.Count() != 0)
+{
+
+	@foreach (var s in category)
+	{
+		<br />
+		<p>@s.Name</p>
+		<br />
+		<a asp-controller="Product" asp-action="Filter" asp-route-id="@s.Id" >لینک</a>
+		<p>@s.Id</p>
+	}
+}
+else
+{
+	<p>This is empty</p>
+}
+ *@

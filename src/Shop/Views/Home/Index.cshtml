@@ -1,13 +1,15 @@
-﻿@{
-	var culture = "fa";
+﻿@using System.Globalization
+@{
 
-	ViewData["Title"] = @ViewLocalizer["welcome", culture];
+
+	ViewData["Title"] = @ViewLocalizer["welcome"];
 
 }
 <div class="text-center">
 	<h1 class="display-4">
-		@ViewLocalizer["welcome", culture]
+		@ViewLocalizer["welcome"]
 	</h1>
-	<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+	@* <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
 </div>
 
+@* @CultureInfo.CurrentCulture   *@

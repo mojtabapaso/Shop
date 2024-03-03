@@ -1,0 +1,79 @@
+﻿@{
+	ViewData["Title"] = "Cart";
+}
+ @using Shop.Entities.MongoEntity;
+@*@using Shop.ViewModels; *@
+@model List<CartItemMongo>
+<h2>Cart</h2>
+<table class="table table-bordered table-striped">
+	@ViewBag.Message
+	@if (Model != null)
+	{
+		<thead>
+			<tr>
+				<th>@ViewLocalizer["Product Name"]</th>
+				<th>@ViewLocalizer["Price"]</th>
+				<th>@ViewLocalizer["Quantity"]</th>
+				<th>@ViewLocalizer["Increase"]</th>
+				<th>@ViewLocalizer["Decrease"]</th>
+				<th>@ViewLocalizer["Remove"]</th>
+				<th>@ViewLocalizer["Total Price"]</th>
+			</tr>
+		</thead>
+		<tbody>
+			@{
+				decimal totalPriceCart = 0;
+			}
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>@item.ProductName</td>
+					<td>@item.Price</td>
+					<td>@item.Quantity</td>
+					<td>
+						<a asp-controller="Cart" asp-action="IncreaseCartItemQuantity" asp-route-productId="@item.ProductId">@ViewLocalizer["Increase"]</a>
+					</td>
+					<td>
+						<a asp-controller="Cart" asp-action="DecreaseCartItemQuantity" asp-route-productId="@item.ProductId">@ViewLocalizer["Decrease"]</a>
+					</td>
+					<td>
+						<a asp-controller="Cart" asp-action="Remove" asp-route-productId="@item.ProductId">@ViewLocalizer["Remove"]</a>
+					</td>
+					<td>
+						@{
+							var price = item.Price;
+							var quantity = item.Quantity;
+							var totalPrice = quantity * price;
+							totalPriceCart += totalPrice;
+						}
+
+						@* @totalPrice *@
+
+					</td>
+				</tr>
+			}
+			@ViewLocalizer["Total Price Cart"] :
+			<p id="totalPriceCart">@totalPriceCart</p>
+
+			<a asp-controller="Cart" asp-action="RemoveAll">@ViewLocalizer["Remove All Item"]</a>
+			@* 			@{
+		TempData["TotalPriceCart"] = totalPriceCart;
+		} *@
+			@* <a asp-controller="Order" asp-action="Payment">Payment</a>  *@
+
+			@* 			<form asp-controller="Order" asp-action="Payment" method="post">
+		<input value="@totalPriceCart" type="hidden" name="totalprice">
+		<input type="submit" class="btn btn-primary" value="پرداخت">
+		</form> *@
+			<br />
+			<a asp-controller="Order" asp-action="Payment" id="payment-btn" class="btn btn-info"> Payment </a>
+		</tbody>
+	}
+	else
+	{
+		<p>@ViewLocalizer["Cart is empty"]</p>
+	}
+
+
+
+</table>

@@ -1,0 +1,54 @@
+﻿@model Shop.ViewModels.DetailProductAndCommnetViewModel
+
+@{
+	ViewData["Title"] = ViewLocalizer["Detail Product"];
+}
+<main class="container">
+    <section class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <img src="@Model.product.ImagePath" class="card-img-top" >
+                <div class="card-body">
+                    <h5 class="card-title">@Model.product.Title</h5>
+                    <p class="card-text">@Model.product.Description</p>
+                    <p class="card-text">@Model.product.Price</p>
+                    <a asp-controller="Cart" asp-action="Add" asp-route-productId="@Model.product.Id" class="btn btn-info">@ViewLocalizer["Add To Cart"]</a>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-controller="Commnet" asp-action="Create">
+                <div asp-validation-summary="ModelOnly"></div>
+                <label asp-for="@Model.comment.Text" class="control-label"></label>
+                <input asp-for="@Model.comment.Text" class="form-control">
+                <span asp-validation-for="@Model.comment.Text" class="text-danger"></span>
+                <input asp-for="@Model.comment.ProductId" type="hidden" value="@Model.product.Id">
+                <button type="submit" class="btn btn-primary">@ViewLocalizer["Send"]</button>
+            </form>
+
+        </div>
+        <div class="col-md-4">
+            <h2>@ViewLocalizer["Commnet Users"]</h2>
+            <ul class="list-unstyled">
+                @foreach (var item in Model.product.Comments)
+                {
+                    <li class="media mb-4">
+                        <div class="media-body">
+                            @* <h5 class="mt-0">@Model.comment.User</h5> *@
+                            <p>@Model.comment.Text</p>
+                        </div>
+                    </li>
+                }
+
+            </ul>
+    </div>
+
+    </div>
+
+
+</main>

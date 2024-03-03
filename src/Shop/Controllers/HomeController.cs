@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using Shop.Models;
-using Shop.services.Contracts;
 using Shop.ViewModels.Products;
-using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Localization;
+using Shop.DataLayer.context;
+using Shop.Services.EntityContracts;
+
 namespace Shop.Controllers;
 public class HomeController : Controller
 {
@@ -14,31 +16,37 @@ public class HomeController : Controller
 	private readonly ILogger<HomeController> logger;
 	private readonly IStringLocalizer<HomeController> localizer;
 	private readonly IProductServisec productServisec;
-	//private readonly IUnitOfWork uow;
-	private readonly IConfiguration configuration;
+	private readonly IStringLocalizer<HomeController> stringLocalizer;
+	private readonly IUnitOfWork uow;
+    private readonly IConfiguration configuration;
 	private readonly IWebHostEnvironment env;
+	private readonly IHttpContextAccessor httpContextAccessor;
 	private readonly IMemoryCache memoryCache;
 
 	public HomeController(ILogger<HomeController> logger,
 		IStringLocalizer<HomeController> localizer,
 		IProductServisec productServisec,
-		//IUnitOfWork uow,
+		IUnitOfWork uow,
+        IStringLocalizer<HomeController> stringLocalizer,
 		IConfiguration configuration,
 		IWebHostEnvironment env,
+		IHttpContextAccessor httpContextAccessor,
 		IMemoryCache memoryCache)
 	{
 		this.logger = logger;
 		this.localizer = localizer;
 		this.productServisec = productServisec;
-		//this.uow = uow;
-		this.configuration = configuration;
+		this.stringLocalizer = stringLocalizer;
+		this.uow = uow;
+        this.configuration = configuration;
 		this.env = env;
+		this.httpContextAccessor = httpContextAccessor;
 		this.memoryCache = memoryCache;
 	}
 
 	public IActionResult Index()
 	{
-		return View();
+        return View();
 	}
 	[ResponseCache(Duration = 60)]
 	public IActionResult AddProduct()
@@ -53,20 +61,11 @@ public class HomeController : Controller
 	[HttpPost]
 	public async Task<IActionResult> AddProductAsync(AddProductViewModel model)
 	{
-
 		if (!ModelState.IsValid)
 		{
-			ModelState.AddModelError(string.Empty, "Please enter valid input.");
+			ModelState.AddModelError(string.Empty, stringLocalizer["Please enter valid input"]);
 			return View(model);
 		}
-		//_productServisec.Add()
-		//_productServisec.Add(
-		//    new Product()
-		//    {
-		//        Title = model.Title,
-		//        Description = model.Description,
-		//    });
-		//await _uow.SaveChangesAsync();
 		return RedirectToAction(nameof(Index));
 	}
 	[Authorize]
@@ -74,8 +73,15 @@ public class HomeController : Controller
 	{
 		return View();
 	}
-
-
+	public IActionResult ChangeLanguage(string name, string returnUrl)
+	{
+		Response.Cookies.Append(
+				CookieRequestCultureProvider.DefaultCookieName,
+				CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(name)),
+				new CookieOptions() { Expires = DateTimeOffset.UtcNow.AddMonths(1) }
+				);
+		return LocalRedirect(returnUrl);
+	}
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public IActionResult Error()
 	{

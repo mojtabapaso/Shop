@@ -2,22 +2,28 @@
 using MongoDB.Driver;
 using Shop.DataLayer.context;
 using Shop.Entities.MongoEntity;
-using Shop.services.Contracts;
+using Shop.Services.Contracts.MongoContracts;
 
 namespace Shop.services.MongoServices;
 
 public class MongoDbAuthenticationServices : IMongoDbAuthenticationServices
 {
+	private readonly IGetMongoCollection getMongoCollection;
+
+	public MongoDbAuthenticationServices(IGetMongoCollection getMongoCollection)
+    {
+		this.getMongoCollection = getMongoCollection;
+	}
 
     public async Task CreateAuthUserAsync(string phoneNumber, string Code)
     {
-        var db = MongoDb.GetUsersCollection();
-        var user = new UserMongoDb(phoneNumber, Code);
+        var db = getMongoCollection.GetUsersCollection();
+        var user = new UserMongo(phoneNumber, Code);
         await db.InsertOneAsync(user.ToBsonDocument());
     }
     public async Task<bool> AddTryAsync(string phoneNumber)
     {
-        var db = MongoDb.GetUsersCollection();
+        var db = getMongoCollection.GetUsersCollection();
         var doc = await GetUserByPhoneNumberAsync(phoneNumber);
         if (doc["Try"].AsInt32 <= 5)
         {
@@ -29,7 +35,7 @@ public class MongoDbAuthenticationServices : IMongoDbAuthenticationServices
     }
     public async Task<BsonDocument> GetUserByPhoneNumberAsync(string PhoneNumber)
     {
-        var db = MongoDb.GetUsersCollection();
+        var db = getMongoCollection.GetUsersCollection();
         var filter = Builders<BsonDocument>.Filter.Eq("PhoneNumber", PhoneNumber);
         var doc = await db.Find(filter).FirstOrDefaultAsync();
         return doc;
@@ -37,20 +43,20 @@ public class MongoDbAuthenticationServices : IMongoDbAuthenticationServices
 
     public async Task<BsonDocument> GetValueByKeyAsync(string Key, object Value)
     {
-        var db = MongoDb.GetUsersCollection();
+        var db = getMongoCollection.GetUsersCollection();
         var filter = Builders<BsonDocument>.Filter.Eq(Key, Value);
         var doc = await db.Find(filter).FirstOrDefaultAsync();
         return doc;
     }
     public async Task<IEnumerable<BsonDocument>> GetAllAsync()
     {
-        var db = MongoDb.GetUsersCollection();
+        var db = getMongoCollection.GetUsersCollection();
         var documents = await db.Find(new BsonDocument()).ToListAsync();
         return documents;
     }
     public async Task DeleteAsync(string Key, object Value)
     {
-        var db = MongoDb.GetUsersCollection();
+        var db = getMongoCollection.GetUsersCollection();
         var doc = await GetValueByKeyAsync(Key, Value);
         await db.DeleteOneAsync(doc);
     }
@@ -61,23 +67,27 @@ public class MongoDbAuthenticationServices : IMongoDbAuthenticationServices
         {
             return false;
         }
-        var db = MongoDb.GetUsersCollection();
+        var db = getMongoCollection.GetUsersCollection();
         var update = Builders<BsonDocument>.Update.Set("IsValid", false);
         await db.UpdateOneAsync(bsonElements, update);
         return true;
     }
-    public async Task<bool> PhoneNumberIsValidAsync(string phoneNuber)
+
+    public async Task<bool> PhoneNumberIsValidAsync(string PhoneNumber)
     {
-        var user = await GetUserByPhoneNumberAsync(phoneNuber);
-        if (user["IsValid"] == false)
+		var db = getMongoCollection.GetUsersCollection();
+
+		var filter = Builders<BsonDocument>.Filter.Eq("PhoneNumber", PhoneNumber);
+		var doc = await db.Find(filter).FirstOrDefaultAsync();
+		if (doc["IsValid"] == false)
         {
             return false;
         }
-        if (user["Try"] <= 5)
+        if (doc["Try"] >= 5)
         {
             return false;
         }
-        if (user["CreateAt"] >= DateTime.UtcNow.AddMinutes(2))
+        if (doc["CreatedAt"] >= DateTime.UtcNow.AddMinutes(2))
         {
             return false;
         }

@@ -17,11 +17,10 @@ public class AdminConfiguration : IEntityTypeConfiguration<User>
 
 			Email = "Admin@Admin.com",
 			NormalizedEmail = "ADMIN@ADMIN.COM",
-			PhoneNumber = "XXXXXXXXXXXXX",
+			PhoneNumber = "09111111111",
 			EmailConfirmed = true,
 			PhoneNumberConfirmed = true,
-			SecurityStamp = new Guid().ToString(),
-
+			SecurityStamp = Guid.NewGuid().ToString(),
 			//Password = "Password"
 		};
 

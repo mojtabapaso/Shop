@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Shop.DataLayer.context;
 using Shop.Entities;
 using Shop.Services.EFServices.Identity;
 using Shop.ViewModels.Admin;
 
 namespace Shop.Areas.Admin.Controllers;
-//[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin")]
 
 [Area(AreaConstants.AdminArea)]
 public class UserController : Controller

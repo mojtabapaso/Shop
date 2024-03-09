@@ -14,7 +14,7 @@ This project is a multilingual website with support for both Persian and English
 - Front-End: HTML, CSS,BootStrap JavaScript Ajax
 - Back-End: ASP.NET
 - Database: MongoDB, SQL Server
-- Design Patterns: Singleton, Unit of Work
+- Design Patterns: Singleton, Unit of Work, Repository
 - OAuth 2.0
 
 ### Installation and Setup

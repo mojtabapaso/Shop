@@ -25,6 +25,3 @@ This project is a multilingual website with support for both Persian and English
 
 ### License
 This project is licensed under the [MIT License](link-to-your-license-file).
-
-## Additional Information
-Please note that the provided project description is a general outline and may need to be customized and expanded based on the specific details and requirements of your project.

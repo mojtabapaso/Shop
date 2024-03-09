@@ -1,6 +1,5 @@
 using Shop.IocConfig;
 using Microsoft.Extensions.Options;
-using Amazon.S3;
 
 var builder = WebApplication.CreateBuilder(args);
 

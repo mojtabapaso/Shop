@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Security.Claims;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -260,6 +261,54 @@ public class AccountController : Controller
 		return RedirectToAction("Index", "Home");
 	}
 
+	public IActionResult ExternalLogin(string ReturnUrl)
+	{
+		string url = Url.Action(nameof(CallBack), "Account", new
+		{
+			ReturnUrl
+		});
+		var properties = signInManager.ConfigureExternalAuthenticationProperties("Google", url);
+		return new ChallengeResult("Google", properties);
+	}
+
+	public async Task<IActionResult> CallBack(string ReturnUrl)
+	{
+		var loginInfo = await signInManager.GetExternalLoginInfoAsync();
+		string email = loginInfo.Principal.FindFirst(ClaimTypes.Email)?.Value ?? null;
+		if (string.IsNullOrEmpty(email))
+		{
+			return BadRequest();
+		}
+		string name = loginInfo.Principal.FindFirst(ClaimTypes.GivenName)?.Type ?? null;
+
+
+
+		var sigin = await signInManager.ExternalLoginSignInAsync("Google", loginInfo.ProviderKey, false, true);
+		if (sigin.Succeeded)
+		{
+			if (Url.IsLocalUrl(ReturnUrl))
+			{
+
+				return Redirect("~/");
+			}
+			return RedirectToAction("Index", "Home");
+		}
+		var user = await userManager.FindByEmailAsync(email);
+
+		if (user == null)
+		{
+			User newUser = new User
+			{
+				UserName = name,
+				Email = email
+			};
+			var resultAddress = await userManager.CreateAsync(newUser);
+			user = newUser;
+		}
+		await userManager.AddLoginAsync(user,loginInfo);
+		await signInManager.SignInAsync(user,false);
+		return Redirect("~/");
+	}
 	[HttpPost]
 	public JsonResult RegexValidatePhoneNumber(string phoneNumber)
 	{
@@ -276,4 +325,6 @@ public class AccountController : Controller
 			return Json(true);
 		return Json(false);
 	}
+
+
 }

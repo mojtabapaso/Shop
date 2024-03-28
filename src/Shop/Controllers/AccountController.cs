@@ -56,6 +56,7 @@ public class AccountController : Controller
 	}
 
 	[HttpPost]
+	[ValidateAntiForgeryToken]
 	public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
 	{
 		if (!ModelState.IsValid)
@@ -166,7 +167,7 @@ public class AccountController : Controller
 		ViewData["phoneNumber"] = phoneNumber;
 		return View();
 	}
-	[HttpPost]
+	[HttpPost, ValidateAntiForgeryToken]
 	public async Task<IActionResult> LoginOTP(CodeOTPViewModel codeOTPViewModel)
 	{
 		if (!ModelState.IsValid)
@@ -187,7 +188,7 @@ public class AccountController : Controller
 	{
 		return View();
 	}
-	[HttpPost]
+	[HttpPost, ValidateAntiForgeryToken]
 	public async Task<IActionResult> LoginByPassword(LoginByPasswordViewModel loginByPasswordViewModel)
 	{
 		if (!ModelState.IsValid)
@@ -223,7 +224,7 @@ public class AccountController : Controller
 		return View();
 	}
 	[Authorize]
-	[HttpPost]
+	[HttpPost, ValidateAntiForgeryToken]
 	public async Task<IActionResult> ChangePassword(ChangePasswordViewModel changePasswordViewModel)
 	{
 		if (!ModelState.IsValid)
@@ -255,11 +256,14 @@ public class AccountController : Controller
 			return View(changePasswordViewModel);
 		}
 	}
+	[HttpPost, ValidateAntiForgeryToken]
 	public async Task<IActionResult> Logout()
 	{
 		await signInManager.SignOutAsync();
 		return RedirectToAction("Index", "Home");
 	}
+
+	[HttpPost, ValidateAntiForgeryToken]
 
 	public IActionResult ExternalLogin(string ReturnUrl)
 	{
@@ -270,6 +274,7 @@ public class AccountController : Controller
 		var properties = signInManager.ConfigureExternalAuthenticationProperties("Google", url);
 		return new ChallengeResult("Google", properties);
 	}
+	[HttpPost, ValidateAntiForgeryToken]
 
 	public async Task<IActionResult> CallBack(string ReturnUrl)
 	{
@@ -305,11 +310,11 @@ public class AccountController : Controller
 			var resultAddress = await userManager.CreateAsync(newUser);
 			user = newUser;
 		}
-		await userManager.AddLoginAsync(user,loginInfo);
-		await signInManager.SignInAsync(user,false);
+		await userManager.AddLoginAsync(user, loginInfo);
+		await signInManager.SignInAsync(user, false);
 		return Redirect("~/");
 	}
-	[HttpPost]
+	[HttpPost, ValidateAntiForgeryToken]
 	public JsonResult RegexValidatePhoneNumber(string phoneNumber)
 	{
 		if (Regex.IsMatch(phoneNumber, @"^09\d{9}$"))
@@ -317,7 +322,7 @@ public class AccountController : Controller
 		return Json(false);
 	}
 
-	[HttpPost]
+	[HttpPost, ValidateAntiForgeryToken]
 	public JsonResult CheckUserName(string userName)
 	{
 		var user = userManager.FindByPhoneNumberAsync(userName);

@@ -29,7 +29,7 @@ public class CommentController : Controller
 		this.userManager = userManager;
 		this.uow = uow;
 	}
-	[HttpPost]
+	[HttpPost, ValidateAntiForgeryToken]
 	[Authorize]
 	public async Task<IActionResult> Create(CommentViewModel commentViewModel)
 	{

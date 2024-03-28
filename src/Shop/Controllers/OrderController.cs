@@ -48,20 +48,21 @@ public class OrderController : Controller
 
 		return View(addresses);
 	}
-	[HttpPost]
+	[HttpPost, ValidateAntiForgeryToken]
 	public async Task<IActionResult> Coupon(string coupon)
 	{
 
 		var userId = userManager.GetUserId(User);
-		bool validateStatus = await mongoCouponServices.ValidateCouponAsync(userId, coupon);
-		if (validateStatus == false)
-		{
-			return Json(false);
-		}
+		//bool validateStatus = await mongoCouponServices.ValidateCouponAsync(userId, coupon);
+		//if (validateStatus == false)
+		//{
+		//	return Json(false);
+		//}
+		await mongoCouponServices.SetCoponAsync(userId, coupon);
 		return Json(true);
 	}
 
-	[HttpPost]
+	[HttpPost, ValidateAntiForgeryToken]
 	public async Task<IActionResult> Payment(string priceCart)
 	{
 		if (priceCart == null)
@@ -70,37 +71,5 @@ public class OrderController : Controller
 		}
 		TempData["TotalPrice"] = priceCart;
 		return Json(true);
-		//var user = await userManager.GetUserAsync(User);
-		//var phoneNumber = user.PhoneNumber;
-		//var payment = await paymentServisec.PaymentAsync(totalprice, "/", phoneNumber, "Description");
-
-		//if (payment.IsSuccessStatusCode)
-		//{
-		//	List<ItemCart> cart = new List<ItemCart>();
-
-		//	var cartBsons = await mongoCartServices.FindCartAsync(user.Id);
-		//	var Items = cartBsons["Items"].AsBsonArray;
-		//	foreach (var item in Items)
-		//	{
-		//		var cartItem = new ItemCart()
-		//		{
-		//			Quantity = item["Quantity"].ToInt32(),
-		//			Product = await productServisec.FindByIdAsync(item["ProductId"].ToString())
-		//		};
-		//		cart.Add(cartItem);
-		//	}
-		//	var order = new Order
-		//	{
-		//		Id = Guid.NewGuid().ToString(),
-		//		IsPament = true,
-		//		ItemsCart = cart,
-		//		OrderDate = DateTime.Now,
-		//		TotalPrice = totalprice,
-		//		User = user,
-		//	};
-		//	await orderServisec.AddAsync(order);
-		//	await uow.SaveChangesAsync();
-		//}
-		//return RedirectToAction("Index", "Home");
 	}
 }

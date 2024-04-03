@@ -26,7 +26,7 @@ public class BrandController : Controller
 	{
 		ViewData["Message"] = message;
 		var brands = await brandServisec.GetAllAsync();
-		var brandsViewModel = mapper.Map<List<Brand>>(brands);
+		var brandsViewModel = mapper.Map<List<BrandViewModel>>(brands);
 		return View(brandsViewModel);
 	}
 	public IActionResult Create()

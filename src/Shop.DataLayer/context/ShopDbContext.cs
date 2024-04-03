@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Shop.DataLayer.SeedData;
 using Shop.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Shop.DataLayer.context;
 
@@ -33,7 +34,6 @@ public class ShopDbContext : IdentityDbContext<User,Role,string>, IUnitOfWork
 		return base.SaveChanges();
 	}
 
-
 	public Task<int> SaveChangesAsync()
 	{
 		return base.SaveChangesAsync();
@@ -42,7 +42,8 @@ public class ShopDbContext : IdentityDbContext<User,Role,string>, IUnitOfWork
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		base.OnModelCreating(modelBuilder);
-
+		//modelBuilder.Entity<IdentityUserLogin<string>>().HasKey(x => new { x.ProviderKey, x.LoginProvider });
+		//modelBuilder.Entity<IdentityUserRole<string>>().HasKey(x => new { x.UserId, x.RoleId });
 		modelBuilder.ApplyConfiguration(new AdminConfiguration());
 
 		modelBuilder.ApplyConfiguration(new RoleConfiguration());

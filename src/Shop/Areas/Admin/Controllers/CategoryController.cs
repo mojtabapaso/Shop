@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nest;
+using Shop.DataLayer.context;
 using Shop.Entities;
 using Shop.Services.EFServices;
+using Shop.Services.EntityContracts;
 using Shop.ViewModels.Category;
 
 namespace Shop.Areas.Admin.Controllers;
@@ -10,27 +13,34 @@ namespace Shop.Areas.Admin.Controllers;
 
 public class CategoryController : Controller
 {
-	private readonly CategoryServices categoryServices;
+	private readonly ICategoryServisec categoryServices;
+	private readonly IMapper mapper;
+	private readonly IUnitOfWork uow;
 
-	public CategoryController(CategoryServices categoryServices)
+	public CategoryController(ICategoryServisec categoryServices,IMapper mapper,IUnitOfWork uow)
     {
 		this.categoryServices = categoryServices;
+		this.mapper = mapper;
+		this.uow = uow;
 	}
-    public IActionResult Index()
+	[HttpGet]
+	public IActionResult Index()
 	{
 		return View();
 	}
+	[HttpGet]
 	public async Task<IActionResult> Detail(string id)
 	{
 		var category = await categoryServices.FindByIdAsync(id);
-		return View(category);
+		var categoryViewModel = mapper.Map<CategoryViewModel>(category);	
+		return View(categoryViewModel);
 	}
+	[HttpGet]
 	public IActionResult Create()
 	{
 		return View();
 	}
-
-
+	[HttpPost,ValidateAntiForgeryToken]
 	public async Task<IActionResult> Create(CategoryViewModel categoryViewModel)
 	{
 		var category = new Category
@@ -41,7 +51,8 @@ public class CategoryController : Controller
 			Products = categoryViewModel.Products,
 			SubCategories = categoryViewModel.SubCategories,
 		};
+		await categoryServices.AddAsync(category);
+		await uow.SaveChangesAsync();
 		return View();
 	}
-
 }

@@ -26,7 +26,6 @@ public class ProductController : Controller
     private readonly ITagServisec tagServisec;
     private readonly IUnitOfWork uow;
 
-
     public ProductController(IProductServisec productServisec,
         IMapper mapper,
         IBrandServisec brandServisec,
@@ -43,38 +42,26 @@ public class ProductController : Controller
         this.tagServisec = tagServisec;
         this.uow = uow;
     }
-	//[HttpGet]
+	[HttpGet]
 	public async Task<IActionResult> Index()
     {
         var products = await productServisec.GetAllWithAllRelatedModelsAsync();
-
         return View(products);
     }
 
-    //[HttpGet]
+    [HttpGet]
     public IActionResult Detail(string id)
     {
-
         var product = productServisec.FindById(id);
-        var mapProduct = mapper.Map<Product>(product);
-
+        var mapProduct = mapper.Map<ProductViewModel>(product);
 		return View(mapProduct);
     }
-
+    [HttpGet]
     public async Task<IActionResult> Create()
     {
         var tags = await tagServisec.GetAllAsync();
-
-        var model = new ProductViewModel
-        {
-            Tags = tags.Select(t => new SelectListItem
-            {
-                Text = t.Name,
-                Value = t.Id,
-            }).ToList(),
-        };
-
-        return View(model);
+		var tagsViewModel = mapper.Map<List<TagViewModel>>(tags);
+        return View(tagsViewModel);
     }
 
 
@@ -99,10 +86,9 @@ public class ProductController : Controller
             Weight = productViewModel.Weight,
             Manufacturer = productViewModel.Manufacturer,
         };
-        var ss = await aws3Services.UploadFileAsync(productViewModel.ImageFile);
-        product.ImagePath = ss;
+        product.ImagePath = await aws3Services.UploadFileAsync(productViewModel.ImageFile);
 
-        List<Tag> listTag = new List<Tag>();
+		List<Tag> listTag = new List<Tag>();
         foreach (var tagId in productViewModel.Tag)
         {
             var tag = await tagServisec.FindByIdAsync(tagId);
@@ -112,7 +98,7 @@ public class ProductController : Controller
             }
             else
             {
-                return NotFound();
+                return View("NotFound");
             }
         }
 		product.Brand = await brandServisec.FindByIdAsync(productViewModel.Brand);
@@ -122,13 +108,12 @@ public class ProductController : Controller
         var resultSvae = await uow.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
-
+    [HttpGet]
     public async Task<IActionResult> Edit(string id)
     {
         var product = await productServisec.FindByIdWithAllRelatedModelsAsync(id);
         return View(product);
     }
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Edit(int id, IFormCollection collection)
@@ -142,9 +127,8 @@ public class ProductController : Controller
             return View();
         }
     }
-
-    //[HttpPost]
-    //[ValidateAntiForgeryToken]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(string id)
     {
         productServisec.Remove(id);
@@ -152,19 +136,4 @@ public class ProductController : Controller
 
         return RedirectToAction(nameof(Index));
     }
-
-    //// POST: ProductController/Delete/5
-    //[HttpPost]
-    //[ValidateAntiForgeryToken]
-    //public IActionResult Delete(int id, IFormCollection collection)
-    //{
-    //    try
-    //    {
-    //        return RedirectToAction(nameof(Index));
-    //    }
-    //    catch
-    //    {
-    //        return View();
-    //    }
-    //}
 }

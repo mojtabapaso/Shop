@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Elasticsearch.Net;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Services.EntityContracts;
 using Shop.ViewModels;
@@ -11,10 +10,7 @@ public class ProductController : Controller
 {
 	private readonly IProductServisec productServisec;
 	private readonly IMapper mapper;
-
-	public ProductController(IProductServisec productServisec,
-		IMapper mapper
-		)
+	public ProductController(IProductServisec productServisec, IMapper mapper)
 	{
 		this.productServisec = productServisec;
 		this.mapper = mapper;
@@ -23,18 +19,20 @@ public class ProductController : Controller
 	public async Task<IActionResult> Search(string quary)
 	{
 		var products = await productServisec.SearchAsync(quary);
-		var sw = mapper.Map<List<ProductViewModel>>(products);
-		return View(sw);
+		var productsViewModel = mapper.Map<List<ProductViewModel>>(products);
+		return View(productsViewModel);
 	}
 	[HttpGet]
 	public async Task<IActionResult> List()
 	{
 		var products = await productServisec.GetAllAsync();
+
 		if (products == null)
 		{
 			return View("NotFound");
 		}
-		return View(products);
+		var productsViewModel = mapper.Map<List<ProductViewModel>>(products);
+		return View(productsViewModel);
 	}
 	[HttpGet]
 	public async Task<IActionResult> Detail(string id)

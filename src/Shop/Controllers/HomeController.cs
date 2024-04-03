@@ -58,7 +58,7 @@ public class HomeController : Controller
 		return View();
 	}
 
-	[HttpPost]
+	[HttpPost, ValidateAntiForgeryToken]
 	public async Task<IActionResult> AddProductAsync(AddProductViewModel model)
 	{
 		if (!ModelState.IsValid)
@@ -68,11 +68,7 @@ public class HomeController : Controller
 		}
 		return RedirectToAction(nameof(Index));
 	}
-	[Authorize]
-	public IActionResult Privacy()
-	{
-		return View();
-	}
+	[HttpPost, ValidateAntiForgeryToken]
 	public IActionResult ChangeLanguage(string name, string returnUrl)
 	{
 		Response.Cookies.Append(

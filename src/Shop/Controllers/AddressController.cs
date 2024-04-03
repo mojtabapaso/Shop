@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shop.DataLayer.context;
 using Shop.Entities;
@@ -31,7 +30,7 @@ public class AddressController : Controller
 	{
 		return View();
 	}
-	[HttpPost]
+	[HttpPost, ValidateAntiForgeryToken]
 	public async Task<IActionResult> Create(AddressViewModel addressViewModel)
 	{
 		string userId = userManager.GetUserId(User);
@@ -51,7 +50,7 @@ public class AddressController : Controller
 		await uow.SaveChangesAsync();
 		return RedirectToAction("List");
 	}
-
+	[HttpGet]
 	public async Task<IActionResult> List()
 	{
 		var userId = userManager.GetUserId(User);
